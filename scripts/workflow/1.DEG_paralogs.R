@@ -17,19 +17,22 @@ suppressPackageStartupMessages({
 # colData: data.frame with at least:
 #   sample_id, tumor_type, batch (optional), purity (optional)
 #   KRAS_mut, NRAS_mut, HRAS_mut (0/1 or TRUE/FALSE)
+
+
 setwd("~/Desktop/paper_analysis/paper_repository")
 colData <- read.csv("input/colData.csv")
-counts <- read.csv("input/counts_log2fpkm.csv")
+counts <- data.table::fread("input/counts_log2fpkm.csv")
 
 rownames(colData) <- colData$SAMPLE_ID
-rownames(count) <- counts$
+
 # ----------------------------
 # 2) Function for paralog-specific DE
 # ----------------------------
 run_limma_paralog <- function(paralog_col, counts, colData,
                               tumor_type_col = "CANCER_TYPE",
                               purity_col = "PURITY",
-                              min_mut = 5) {
+                              min_mut = 5,
+                              pca = F) {
   
   stopifnot(paralog_col %in% colnames(colData))
   
@@ -105,6 +108,7 @@ run_limma_paralog <- function(paralog_col, counts, colData,
   # ----------------------------
   # 6) PCA diagnostic (robust)
   # ----------------------------
+  if(pca) {
   gene_var <- apply(counts_sel, 1, var)
   counts_sel_filtered <- counts_sel[gene_var > 0, , drop=FALSE]
   
@@ -132,7 +136,7 @@ run_limma_paralog <- function(paralog_col, counts, colData,
     message(sprintf("[%s] PCA skipped: too few non-zero variance genes or samples (MUT=%d, WT=%d).",
                     paralog_col, n_mut, n_wt))
   }
-  
+  }
   # ----------------------------
   # 7) Return results
   # ----------------------------
@@ -163,5 +167,17 @@ seed_hras <- hras$seed
 seed_db <- data.frame(seed_kras= kras$seed,
                       seed_nras = nras$seed,
                       seed_hras= hras$seed)
+seed_db <- rownames_to_column(seed_db)
 
 write.csv(seed_db,"output/seed_weights.csv", row.names = T, quote = F)
+
+write.csv(deg_kras,"output/deg_kras.csv", row.names = T, quote = F)
+write.csv(deg_nras,"output/deg_nras.csv", row.names = T, quote = F)
+write.csv(deg_hras,"output/deg_hras.csv", row.names = T, quote = F)
+
+summary(seed_db)
+
+plot(density(seed_db$seed_kras))
+plot(density(seed_db$seed_nras))
+plot(density(seed_db$seed_hras))
+
