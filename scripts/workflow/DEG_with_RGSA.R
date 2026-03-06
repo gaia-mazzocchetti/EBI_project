@@ -2,6 +2,8 @@ library(ReactomeGSA)
 library(Biobase)
 library(dplyr)
 
+setwd("../paper_repository/EBI_proj/")
+
 colData <- read.csv("input/colData.csv")
 counts <- data.table::fread("input/counts_log2fpkm.csv")
 

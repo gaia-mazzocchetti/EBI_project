@@ -13,7 +13,7 @@ set.seed(1234)
 # 1) Load seeds
 # -------------------------------------------------------------------------------
 
-seeds <- read.csv("output/seed_weights_ann.csv")
+seeds <- read.csv("output/DEG/seed_weights_ann.csv")
 
 # Assign UniProt IDs as names
 seed_kras <- seeds$seed_kras; names(seed_kras) <- seeds$uniprotswissprot
@@ -153,6 +153,10 @@ result_kras <- run_ras_ppr(g_kras, seed_kras, topN=100, prefix="KRAS")
 result_nras <- run_ras_ppr(g_nras, seed_nras, topN=100, prefix="NRAS")
 result_hras <- run_ras_ppr(g_hras, seed_hras, topN=100, prefix="HRAS")
 
+saveRDS(result_kras, "output/propagated_networks/result_kras.rds")
+saveRDS(result_nras, "output/propagated_networks/result_nras.rds")
+saveRDS(result_hras, "output/propagated_networks/result_hras.rds")
+
 # -------------------------------------------------------------------------------
 # 5) Network exploration function
 # -------------------------------------------------------------------------------
@@ -223,10 +227,10 @@ explore_kras <- explore_network(g_kras, result_kras, "kras")
 explore_nras <- explore_network(g_nras, result_nras, "nras")
 explore_hras <- explore_network(g_hras, result_hras, "hras")
 
+saveRDS(explore_kras, "output/propagated_networks/explore_kras.rds")
+saveRDS(explore_nras, "output/propagated_networks/explore_nras.rds")
+saveRDS(explore_hras, "output/propagated_networks/explore_hras.rds")
 
 clust <- result_kras[["clusters"]]
-names(clust[clust == 2])
-writeLines(names(clust[clust == 2]), "output/results/kras_cluster2_proteins.txt")
-writeLines(explore_kras$bridge_direct$node, "output/results/kras_direct_bridge.txt")
+writeLines(names(clust[clust == 2]), "output/propagated_networks/results/kras_cluster2_proteins.txt")
 
-write.csv(explore_hras[["bridge_direct"]], "output/results/hras_bridge_direct.csv")

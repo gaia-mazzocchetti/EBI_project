@@ -1,0 +1,4 @@
+paralog	nodes	edges	modularity	n_clusters
+KRAS	1150	1910	0.43582453880102	3
+NRAS	821	1017	0	1
+HRAS	822	1030	0	1

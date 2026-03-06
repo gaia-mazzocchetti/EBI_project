@@ -21,7 +21,7 @@ suppressPackageStartupMessages({
 
 setwd("~/Desktop/paper_analysis/paper_repository")
 colData <- read.csv("input/colData.csv")
-counts <- data.table::fread("input/counts_log2fpkm.csv")
+counts <- data.table::fread("../input/counts_log2fpkm.csv")
 
 rownames(colData) <- colData$SAMPLE_ID
 
