@@ -5,11 +5,13 @@ library(dplyr)
 setwd("../paper_repository/EBI_proj/")
 
 colData <- read.csv("input/colData.csv")
-counts <- data.table::fread("input/counts_log2fpkm.csv")
+counts <- data.table::fread("../input/counts_log2fpkm.csv")
 
 counts_collapsed <- counts %>%
   group_by(gene_name) %>%
   summarise(across(where(is.numeric), mean))
+
+readr::write_tsv(counts_collapsed, "../input/collapsed_counts.tsv")
 
 counts_collapsed <- as.data.frame(counts_collapsed)
 rownames(counts_collapsed) <- counts_collapsed$gene_name
@@ -27,6 +29,7 @@ my_request <-ReactomeAnalysisRequest(method = "Camera")
 my_request <- set_parameters(request = my_request, create_reactome_visualization = F)
 
 # add the dataset using the loaded object
+
 my_request <- add_dataset(request = my_request, 
                           expression_values = expr, 
                           name = "KRAS analysis", 
@@ -34,6 +37,9 @@ my_request <- add_dataset(request = my_request,
                           comparison_factor = "kras_mut", 
                           comparison_group_1 = "TRUE", 
                           comparison_group_2 = "FALSE",
-                          additional_factors = c("CANCER_TYPE", "PURITY"))
+                          additional_factors = c("CANCER_TYPE", "PURITY"),
+                          verbose =T)
 
-res <- perform_reactome_analysis(my_request)
+sink("../report.txt")
+res <- perform_reactome_analysis(my_request, verbose =T)
+sink()
