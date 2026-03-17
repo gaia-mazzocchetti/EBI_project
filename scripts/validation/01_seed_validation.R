@@ -91,7 +91,7 @@ analyze_seed_centrality <- function(g, seeds, outfile, save = T){
     cent$protein %in% seeds, "seed", "non_seed"
   )
   
-  cent <- cent[cent$protein %in% seeds, ]
+  #cent <- cent[cent$protein %in% seeds, ]
   
   if(save) {
    write.table(
@@ -106,20 +106,67 @@ analyze_seed_centrality <- function(g, seeds, outfile, save = T){
   return(cent)
 }
 
+#KRAS
 cent_kras <- analyze_seed_centrality(
   g_kras,
   seed_kras,
   "output/validation_results/kras_seed_centrality.tsv"
 )
 
+cent_kras$group2 <- ifelse(cent_kras$protein %in% unique_k, "paralog-specific",
+                           ifelse(cent_kras$protein %in% shared_all, "shared", "other"))
+
+cent_kras2 <- cent_kras %>% filter(group2 != "other") 
+kras_test <- wilcox.test(betweenness ~ group2, data= cent_kras2 )
+kras_btw <- cent_kras2 %>% group_by(group2) %>% summarize(mean_btw = mean(betweenness)) %>% mutate(prot = "KRAS",
+                                                                                                   wilcox_p= kras_test$p.value)
+
+#NRAS
 cent_nras <- analyze_seed_centrality(
   g_nras,
   seed_nras,
   "output/validation_results/nras_seed_centrality.tsv"
 )
 
+cent_nras$group2 <- ifelse(cent_nras$protein %in% unique_n, "paralog-specific",
+                           ifelse(cent_nras$protein %in% shared_all, "shared", "other"))
+
+cent_nras2 <- cent_nras %>% filter(group2 != "other") 
+nras_test <- wilcox.test(betweenness ~ group2, data= cent_nras2 )
+nras_btw <- cent_nras2 %>% group_by(group2) %>% summarize(mean_btw = mean(betweenness)) %>% mutate(prot = "NRAS",
+                                                                                                   wilcox_p= nras_test$p.value)
+
+
+#HRAS
 cent_hras <- analyze_seed_centrality(
   g_hras,
   seed_hras,
   "output/validation_results/hras_seed_centrality.tsv"
 )
+
+
+cent_hras$group2 <- ifelse(cent_hras$protein %in% unique_h, "paralog-specific",
+                           ifelse(cent_hras$protein %in% shared_all, "shared", "other"))
+
+cent_hras2 <- cent_hras %>% filter(group2 != "other") 
+hras_test <- wilcox.test(betweenness ~ group2, data= cent_hras2 )
+hras_btw <- cent_hras2 %>% group_by(group2) %>% summarize(mean_btw = mean(betweenness)) %>% mutate(prot = "HRAS",
+                                                                                                   wilcox_p= hras_test$p.value)
+
+
+
+btw <- rbind(kras_btw, nras_btw, hras_btw)
+
+write.table(
+  btw,
+  "output/validation_results/core_shared_seed_betweenness_means.tsv",
+  sep="\t",
+  row.names=FALSE,
+  quote=FALSE
+)
+
+sink("output/validation_results/wilcoxon_seed_betweenness.txt")
+kras_test <- wilcox.test(betweenness ~ group, data= cent_kras)
+wilcox.test(betweenness ~ group, data= cent_nras )
+wilcox.test(betweenness ~ group, data= cent_hras )
+sink()

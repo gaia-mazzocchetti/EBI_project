@@ -6,7 +6,7 @@
 library(igraph)
 
 load_network <- function(file){
-  nt <- read_csv(file)
+  nt <- readr::read_csv(file)
   edges <- nt %>%
     dplyr::select(interactor_A, interactor_B) %>%
     dplyr::filter(interactor_A != interactor_B)

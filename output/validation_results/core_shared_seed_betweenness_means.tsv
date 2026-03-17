@@ -1,0 +1,7 @@
+group2	mean_btw	prot	wilcox_p
+paralog-specific	0.0092205765653301	KRAS	0.858097117309484
+shared	3.99681371539555e-05	KRAS	0.858097117309484
+paralog-specific	0	NRAS	NA
+shared	0	NRAS	NA
+paralog-specific	0	HRAS	NA
+shared	0	HRAS	NA

@@ -1,2 +1,14 @@
-"cluster_density","cluster_density_noiso","network_density","density_enrichment","density_enrichment_noiso","mean_cluster_bt","mean_backbone_bt","betweenness_p","mean_cluster_bt_noiso","betweenness_p_noiso"
-0.0527411519777932,0,0.00289098270707988,18.2433301481301,0,0.00759314359453707,3.99681371539555e-05,2.15913048920782e-05,0.00047024050597673,1.88423840585137e-05
+"Variable","Value"
+"cluster_density",0.0527411519777932
+"cluster_density_noiso",0
+"network_density",0.00289098270707988
+"density_enrichment",18.2433301481301
+"density_enrichment_noiso",0
+"mean_cluster_bt",0.00759314359453707
+"mean_backbone_bt",3.99681371539555e-05
+"mean_all_other_bt",0.000590836928584224
+"mean_cluster_bt_noiso",0.00047024050597673
+"betweenness_p",2.15913048920782e-05
+"betweenness_p_noiso",1.88423840585137e-05
+"betweenness_p_all_other",4.18310898259923e-92
+"betweenness_p_all_other_noiso",1.55116130903892e-90

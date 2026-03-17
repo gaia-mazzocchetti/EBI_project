@@ -1,0 +1,21 @@
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  betweenness by group2
+W = 211.5, p-value = 0.8581
+alternative hypothesis: true location shift is not equal to 0
+
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  betweenness by group2
+W = 206.5, p-value = NA
+alternative hypothesis: true location shift is not equal to 0
+
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  betweenness by group2
+W = 238, p-value = NA
+alternative hypothesis: true location shift is not equal to 0
+
