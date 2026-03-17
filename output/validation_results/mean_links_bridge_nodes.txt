@@ -1,0 +1,18 @@
+[1] 0.01246883
+[1] 1.27182
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$core_links_norm and df$peripheral_links_norm
+W = 800, p-value < 2.2e-16
+alternative hypothesis: true location shift is not equal to 0
+
+[1] 0.0872818
+[1] 1.197007
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  df$core_links_norm and df$peripheral_links_norm
+W = 799, p-value < 2.2e-16
+alternative hypothesis: true location shift is not equal to 0
+

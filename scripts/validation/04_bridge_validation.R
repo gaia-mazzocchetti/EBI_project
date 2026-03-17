@@ -55,29 +55,26 @@ return(res)
 }
 
 core_kras <- union(shared_all, union(shared_kn, shared_kh))
-core_nras <- union(shared_all, union(shared_kn, shared_nh))
-core_hras <- union(shared_all, union(shared_kh, shared_nh))
-
 
 brdge_kras <- bridge_enrichment(
   g_kras,
   explore_kras$bridge_direct$node,
-  core_kras,
-  "output/validation_results/kras_bridge_enrichment.tsv"
+  shared_all,
+  "output/validation_results/kras_bridge_enrichment.tsv", save =F
 )
 
 bridge_nras <- bridge_enrichment(
   g_nras,
   explore_nras$bridge_direct$node,
-  core_nras,
-  "output/validation_results/nras_bridge_enrichment.tsv"
+  shared_all,
+  "output/validation_results/nras_bridge_enrichment.tsv",  save =F
 )
 
 bridge_hras <- bridge_enrichment(
   g_hras,
   explore_hras$bridge_direct$node,
-  core_hras,
-  "output/validation_results/hras_bridge_enrichment.tsv"
+  shared_all,
+  "output/validation_results/hras_bridge_enrichment.tsv",  save =F
 )
 
 
@@ -110,49 +107,38 @@ bridge_connection_test <- function(g, bridge, core, seeds){
     peripheral_links = peripheral_links
   )
   
-  wilcox.test(df$core_links, df$peripheral_links)
+  
+  df$core_links_norm <- df$core_links / length(core)
+  df$peripheral_links_norm <- df$peripheral_links / length(peripheral)
+  
+  wl <- wilcox.test(df$core_links_norm, df$peripheral_links_norm)
+  
+  res <- list(test =wl, links = df)
+  return(res)
   
 }
 
-bridge_connection_test(
-  g_hras,
-  explore_hras$bridge_direct$node,
-  core_hras,
-  seed_hras
+kras_neigh <- bridge_connection_test(
+  g_kras,
+  explore_kras$bridge_direct$node,
+  shared_all,
+  seed_kras
 )
 
-bridge_connection_test(
+core_kras <- union(shared_all, union(shared_kn, shared_kh))
+kras_neigh_more <- bridge_connection_test(
   g_kras,
   explore_kras$bridge_direct$node,
   core_kras,
   seed_kras
 )
 
-bridge_connection_test(
-  g_nras,
-  explore_nras$bridge_direct$node,
-  core_nras,
-  seed_nras
-)
+sink("output/validation_results/mean_links_bridge_nodes.txt")
+mean(kras_neigh$links$core_links)
+mean(kras_neigh$links$peripheral_links)
+kras_neigh$test
 
-
-ecount(g_kras)
-ecount(g_nras)
-ecount(g_hras)
-
-vcount(g_kras)
-vcount(g_nras)
-vcount(g_hras)
-
-
-seed_density <- function(g, seeds){
-  
-  sub <- induced_subgraph(g, seeds)
-  
-  edge_density(sub)
-  
-}
-
-seed_density(g_kras, seed_kras)
-seed_density(g_nras, seed_nras)
-seed_density(g_hras, seed_hras)
+mean(kras_neigh_more$links$core_links)
+mean(kras_neigh_more$links$peripheral_links)
+kras_neigh_more$test
+sink()
