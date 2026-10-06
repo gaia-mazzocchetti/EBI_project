@@ -15,9 +15,7 @@ load_network <- function(file){
 }
 
 # Networks
-g_kras <- load_network("input/networks/kras_nt.csv")
-g_nras <- load_network("input/networks/nras_nt.csv")
-g_hras <- load_network("input/networks/hras_nt.csv")
+interactome <- load_network("input/networks/kras_nt.csv")
 
 # PPR results
 result_kras <- readRDS("output/propagated_networks/result_kras.rds")

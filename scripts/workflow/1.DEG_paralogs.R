@@ -21,10 +21,14 @@ suppressPackageStartupMessages({
 
 setwd("~/Desktop/paper_analysis/paper_repository")
 colData <- read.csv("input/colData.csv")
-counts <- data.table::fread("../input/counts_log2fpkm.csv")
+counts <- data.table::fread("input/counts_log2fpkm.csv")
 
 rownames(colData) <- colData$SAMPLE_ID
+colData$Cancer_type_cl <- ifelse(colData$CANCER_TYPE == "Uterine Endometrioid Carcinoma", "Endometrial Cancer", 
+                                 ifelse(colData$CANCER_TYPE == "Mature B-cell lymphoma", "Mature B-Cell Neoplasms", colData$CANCER_TYPE))
 
+colData <- colData %>% filter(Cancer_type_cl != "Posttransplant Lymphoproliferative Disorders")
+table(colData$Cancer_type_cl)
 # ----------------------------
 # 2) Function for paralog-specific DE
 # ----------------------------

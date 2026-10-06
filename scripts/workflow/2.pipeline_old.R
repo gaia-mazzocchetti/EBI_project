@@ -33,9 +33,9 @@ load_network <- function(file){
   graph_from_data_frame(edges, directed = FALSE)
 }
 
-g_kras <- load_network("input/networks/kras_nt.csv")
-g_nras <- load_network("input/networks/nras_nt.csv")
-g_hras <- load_network("input/networks/hras_nt.csv")
+interactome <- load_network("input/all_cancer_interactome.csv")
+#g_nras <- load_network("input/networks/nras_nt.csv")
+#g_hras <- load_network("input/networks/hras_nt.csv")
 
 # -------------------------------------------------------------------------------
 # 3) PageRank + clustering function
@@ -149,13 +149,15 @@ run_ras_ppr <- function(g, seed_vector, topN = 300,
 # 4) Run workflow
 # -------------------------------------------------------------------------------
 
-result_kras <- run_ras_ppr(g_kras, seed_kras, topN=100, prefix="KRAS")
-result_nras <- run_ras_ppr(g_nras, seed_nras, topN=100, prefix="NRAS")
-result_hras <- run_ras_ppr(g_hras, seed_hras, topN=100, prefix="HRAS")
+result_kras <- run_ras_ppr(interactome, seed_kras, topN=100, prefix="KRAS")
+result_nras <- run_ras_ppr(interactome, seed_nras, topN=100, prefix="NRAS")
+result_hras <- run_ras_ppr(interactome, seed_hras, topN=100, prefix="HRAS")
 
-saveRDS(result_kras, "output/propagated_networks/result_kras.rds")
-saveRDS(result_nras, "output/propagated_networks/result_nras.rds")
-saveRDS(result_hras, "output/propagated_networks/result_hras.rds")
+dir.create("output2/")
+dir.create("output2/propagated_networks/")
+saveRDS(result_kras, "output2/propagated_networks/result_kras.rds")
+saveRDS(result_nras, "output2/propagated_networks/result_nras.rds")
+saveRDS(result_hras, "output2/propagated_networks/result_hras.rds")
 
 # -------------------------------------------------------------------------------
 # 5) Network exploration function
@@ -223,13 +225,13 @@ explore_network <- function(g, result_obj, prefix, topN = 100,
 # 6) Run exploration
 # -------------------------------------------------------------------------------
 
-explore_kras <- explore_network(g_kras, result_kras, "kras")
-explore_nras <- explore_network(g_nras, result_nras, "nras")
-explore_hras <- explore_network(g_hras, result_hras, "hras")
+explore_kras <- explore_network(interactome, result_kras, "kras")
+explore_nras <- explore_network(interactome, result_nras, "nras")
+explore_hras <- explore_network(interactome, result_hras, "hras")
 
-saveRDS(explore_kras, "output/propagated_networks/explore_kras.rds")
-saveRDS(explore_nras, "output/propagated_networks/explore_nras.rds")
-saveRDS(explore_hras, "output/propagated_networks/explore_hras.rds")
+saveRDS(explore_kras, "output2/propagated_networks/explore_kras.rds")
+saveRDS(explore_nras, "output2/propagated_networks/explore_nras.rds")
+saveRDS(explore_hras, "output2/propagated_networks/explore_hras.rds")
 
 clust <- result_kras[["clusters"]]
 writeLines(names(clust[clust == 2]), "output/propagated_networks/results/kras_cluster2_proteins.txt")
